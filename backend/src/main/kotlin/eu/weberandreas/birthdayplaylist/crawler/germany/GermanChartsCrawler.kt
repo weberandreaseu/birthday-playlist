@@ -19,9 +19,9 @@ class GermanChartsCrawler : ChartsCrawler {
         val document = connection.get()
         val elements = document.select("table.table.chart-table tbody :first-child td.ch-info")
         val foundArtist: Element? = elements.select(".info-artist").first()
-        val artist = foundArtist?: throw RuntimeException("No artist for for top song on $date")
+        val artist = foundArtist ?: throw RuntimeException("No artist for for top song on $date")
         val foundTitle: Element? = elements.select(".info-title").first()
-        val title = foundTitle?: throw RuntimeException("No title for for top song on $date")
+        val title = foundTitle ?: throw RuntimeException("No title for for top song on $date")
         return Song(title.text(), artist.text())
     }
 
