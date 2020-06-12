@@ -2,7 +2,6 @@ package eu.weberandreas.birthdayplaylist.crawler.germany
 
 import org.junit.jupiter.api.Assertions.assertEquals
 import org.junit.jupiter.api.BeforeEach
-import org.junit.jupiter.api.Disabled
 import org.junit.jupiter.api.Test
 import java.time.LocalDate
 
@@ -22,7 +21,6 @@ internal class GermanChartsCrawlerTest {
     }
 
     @Test
-    @Disabled
     fun `ensure top single in october is 'Unrockbar'`() {
         val date = LocalDate.of(2003, 10, 3)
         val single = crawler.numberOneAt(date)
