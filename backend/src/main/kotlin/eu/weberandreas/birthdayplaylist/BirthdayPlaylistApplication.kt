@@ -4,8 +4,8 @@ import org.springframework.boot.autoconfigure.SpringBootApplication
 import org.springframework.boot.runApplication
 
 @SpringBootApplication
-class SpotifyBirthdayPlaylistApplication
+class BirthdayPlaylistApplication
 
 fun main(args: Array<String>) {
-	runApplication<SpotifyBirthdayPlaylistApplication>(*args)
+	runApplication<BirthdayPlaylistApplication>(*args)
 }
