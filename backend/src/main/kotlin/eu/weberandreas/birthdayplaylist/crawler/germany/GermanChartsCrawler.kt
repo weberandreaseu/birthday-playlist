@@ -4,8 +4,7 @@ import eu.weberandreas.birthdayplaylist.crawler.ChartsCrawler
 import eu.weberandreas.birthdayplaylist.model.Song
 import org.jsoup.Jsoup
 import org.jsoup.nodes.Element
-import java.sql.Timestamp
-import java.time.LocalDate
+import java.time.*
 
 class GermanChartsCrawler : ChartsCrawler {
     private val chartUrl = "https://www.offiziellecharts.de/charts/single/for-date-"
@@ -26,6 +25,7 @@ class GermanChartsCrawler : ChartsCrawler {
     }
 
     fun chartUrl(date: LocalDate): String {
-        return chartUrl + Timestamp.valueOf(date.atStartOfDay()).time
+        val dateTime = ZonedDateTime.of(date, LocalTime.MIN, ZoneId.of("Europe/Paris"))
+        return chartUrl + Instant.from(dateTime).toEpochMilli()
     }
 }

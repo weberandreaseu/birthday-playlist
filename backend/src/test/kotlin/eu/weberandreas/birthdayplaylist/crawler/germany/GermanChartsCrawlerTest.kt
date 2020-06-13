@@ -17,14 +17,14 @@ internal class GermanChartsCrawlerTest {
     fun `ensure date in converted to the right crawling url`() {
         val date = LocalDate.of(2003, 10, 1)
         val url = crawler.chartUrl(date)
-        assertEquals(url, "https://www.offiziellecharts.de/charts/single/for-date-1064959200000")
+        assertEquals("https://www.offiziellecharts.de/charts/single/for-date-1064959200000", url)
     }
 
     @Test
     fun `ensure top single in october is 'Unrockbar'`() {
         val date = LocalDate.of(2003, 10, 3)
         val single = crawler.numberOneAt(date)
-        assertEquals(single.artist, "Die Ärzte")
-        assertEquals(single.title, "Unrockbar")
+        assertEquals("Die Ärzte", single.artist)
+        assertEquals("Unrockbar", single.title)
     }
 }
