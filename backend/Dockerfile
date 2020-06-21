@@ -1,11 +1,13 @@
-# build stage
-FROM gradle:6.5-jdk14 as build
-WORKDIR /home/gradle/birthday-playlist
-COPY . .
-RUN gradle build
+FROM adoptopenjdk:14-jre-hotspot as builder
+WORKDIR application
+ARG JAR_FILE=build/libs/*.jar
+COPY ${JAR_FILE} application.jar
+RUN java -Djarmode=layertools -jar application.jar extract
 
-# execution stage
-FROM openjdk:14-alpine
-WORKDIR /home/jdk/birthday-playlist
-COPY --from=build /home/gradle/birthday-playlist/build/libs/birthdayplaylist-0.0.1-SNAPSHOT.jar /home/jdk/birthday-playlist
-CMD ["java", "-jar", "birthdayplaylist-0.0.1-SNAPSHOT.jar"]
+FROM adoptopenjdk:14-jre-hotspot
+WORKDIR application
+COPY --from=builder application/dependencies/ ./
+COPY --from=builder application/spring-boot-loader/ ./
+COPY --from=builder application/snapshot-dependencies/ ./
+COPY --from=builder application/application/ ./
+ENTRYPOINT ["java", "org.springframework.boot.loader.JarLauncher"]

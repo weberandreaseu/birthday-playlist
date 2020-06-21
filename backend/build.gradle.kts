@@ -1,4 +1,5 @@
 import org.jetbrains.kotlin.gradle.tasks.KotlinCompile
+import org.springframework.boot.gradle.tasks.bundling.BootJar
 
 plugins {
 	id("org.springframework.boot") version "2.3.0.RELEASE"
@@ -46,4 +47,8 @@ tasks.withType<KotlinCompile> {
 		freeCompilerArgs = listOf("-Xjsr305=strict")
 		jvmTarget = "11"
 	}
+}
+
+tasks.getByName<BootJar>("bootJar") {
+	layered()
 }
