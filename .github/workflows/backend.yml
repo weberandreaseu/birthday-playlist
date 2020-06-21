@@ -1,0 +1,60 @@
+name: Build, test and deploy the backend
+
+on:
+  push
+  #   paths: 
+  #   - 'backend/**'
+  # pull_request:
+  #   paths: 
+  #   - 'backend/**'
+
+jobs:
+  build:
+    name: Build and test
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v2
+      - name: Set up JDK 14
+        uses: actions/setup-java@v1
+        with:
+          java-version: 14
+      - name: Cache Gradle packages
+        uses: actions/cache@v2
+        with:
+          path: ~/.gradle/caches
+          key: ${{ runner.os }}-gradle-${{ hashFiles('**/*.gradle.kts') }}
+          restore-keys: ${{ runner.os }}-gradle
+      - name: Build and test with Gradle
+        run: |
+          cd backend
+          ./gradlew build
+      - name: Upload jar
+        uses: actions/upload-artifact@v1
+        with:
+          name: package
+          path: backend/build/libs
+  image:
+    name: Publish docker image
+    # push only master builds to docker registry
+    if: github.ref == 'refs/heads/master'
+    runs-on: ubuntu-latest
+    needs: build
+    steps:
+      - name: Check out the repo
+        uses: actions/checkout@v2
+      - name: Download jar
+        uses: actions/download-artifact@v2
+        with:
+          name: package
+          path: build/libs
+      - name: Push to GitHub Packages
+        uses: docker/build-push-action@v1
+        with:
+          # assumes project root as cwd -> jar is NOT downloaded to /backend**
+          dockerfile: backend/Dockerfile
+          username: ${{ github.actor }}
+          password: ${{ secrets.REGISTRY_TOKEN }}
+          registry: docker.pkg.github.com
+          repository: weberandreaseu/birthday-playlist/birthday-playlist-backend
+          tag_with_ref: true
+
